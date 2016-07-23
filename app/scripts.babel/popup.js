@@ -8,12 +8,14 @@ const LongitudeErrorText = document.getElementById('invalid_longitude');
 const LatitudeErrorText = document.getElementById('invalid_latitude');
 
 longitudeInput.placeholder = localStorage['longitude'];
-LatitudeErrorText.placeholder = localStorage['latitude'];
+latitudeInput.placeholder = localStorage['latitude'];
 
 submitButton.onclick = function() {
   const isInvalid = isNaN(latitudeInput.value) || isNaN(longitudeInput.value);
 
   if (!isInvalid) {
+    localStorage['latitude'] = latitudeInput.value;
+    localStorage['longitude'] = longitudeInput.value;
     longitudeInput.placeholder = longitudeInput.value;
     LatitudeErrorText.placeholder = latitudeInput.value;
     chrome.runtime.sendMessage({repoll: true}, function(response) { });
