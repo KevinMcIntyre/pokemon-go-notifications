@@ -41,85 +41,80 @@ chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) =
 
 function lookForPokemon() {
   let statusChange = false;
-  const latitude = localStorage['latitude'];
-  const longitude = localStorage['longitude'];
+  const latitude = '40.170855983762806';
+  const longitude = '-75.11953353881836';
   const pollingTime = localStorage['pollingTime'];
 
-  console.log("latitude: ", latitude)
-  console.log("longitude: ", longitude)
-
-  request
-    .get(`https://pokevision.com/map/data/${latitude}/${longitude}`)
-    .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
-    .set('accept-language', 'en-US,en;q=0.8')
-    .set('cache-control', 'no-cache')
-    .set('pragma', 'no-cache')
-    .set('upgrade-insecure-requests', '1')
-    .end((err, res) => {
-      if (err || !res.ok) {
-        if (!pokevisionDown) {
-          statusChange = true;
-        }
-        console.log('Unable to contact https://pokevision.com');
-      } else if (res.body) {
-        if (pokevisionDown) {
-          statusChange = true;
-        }
-        const pokemonFound = res.body['pokemon'];
-        if (pokemonFound) {
-          for (let pokemon of pokemonFound) {
-            newPokemonNotification(pokemon['pokemonId'], pokemon['uid']);
-            if (!pokemonHasBeenSighted(pokemon)) {
-              newPokemonNotification(pokemon['pokemonId'], pokemon['uid']);
-              currentPokemon.push(pokemon);
-            }
+  scanForPokemon(latitude, longitude, () => {
+    request
+      .get(`https://pokevision.com/map/data/${latitude}/${longitude}`)
+      .set('accept', 'application/json, text/javascript, */*; q=0.01')
+      .set('accept-language', 'en-US,en;q=0.8')
+      .set('cache-control', 'no-cache')
+      .set('pragma', 'no-cache')
+      .set('upgrade-insecure-requests', '1')
+      .end((err, res) => {
+        if (err || !res.ok) {
+          if (!pokevisionDown) {
+            statusChange = true;
           }
-          const foundPokemonIds = pokemonFound.map(function(foundPokemon) {
-            return foundPokemon['id'];
-          });
-          currentPokemon = currentPokemon.map(function(pokemon) {
-            if (foundPokemonIds.indexOf(pokemon['id']) > -1) {
-              return pokemon;
+          console.log('Unable to contact https://pokevision.com');
+        } else if (res.body) {
+          if (pokevisionDown) {
+            statusChange = true;
+          }
+          const pokemonFound = res.body['pokemon'];
+          if (pokemonFound) {
+            for (let pokemon of pokemonFound) {
+              if (!pokemonHasBeenSighted(pokemon)) {
+                newPokemonNotification(pokemon['pokemonId'], pokemon['id']);
+                currentPokemon.push(pokemon);
+              }
             }
-          });
-        }
-      } else {
-        if (!pokevisionDown) {
-          statusChange = true;
-        }
-      }
-
-      if (statusChange) {
-        pokevisionDown = !pokevisionDown;
-        if (pokevisionDown) {
-          chrome.browserAction.setIcon({
-            path : {
-              '19': 'images/yellow-pokeball-19.png',
-              '38': 'images/yellow-pokeball-38.png'
-            }
-          });
-          chrome.browserAction.setTitle({
-            title: 'PokeVision is down'
-          });
+            const foundPokemonIds = pokemonFound.map(function(foundPokemon) {
+              return foundPokemon['id'];
+            });
+            currentPokemon = currentPokemon.filter(function(pokemon) {
+              return (foundPokemonIds.indexOf(pokemon['id']) > -1)
+            });
+          }
         } else {
-          chrome.browserAction.setIcon({
-            path : {
-              '19': 'images/pokeball-19.png',
-              '38': 'images/pokeball-38.png'
-            }
-          });
-          chrome.browserAction.setTitle({
-            title: 'Pokemon GO Notifications'
-          });
+          if (!pokevisionDown) {
+            statusChange = true;
+          }
         }
-      }
 
-      console.log(currentPokemon);
-    });
+        if (statusChange) {
+          pokevisionDown = !pokevisionDown;
+          if (pokevisionDown) {
+            chrome.browserAction.setIcon({
+              path : {
+                '19': 'images/yellow-pokeball-19.png',
+                '38': 'images/yellow-pokeball-38.png'
+              }
+            });
+            chrome.browserAction.setTitle({
+              title: 'PokeVision is down'
+            });
+          } else {
+            chrome.browserAction.setIcon({
+              path : {
+                '19': 'images/pokeball-19.png',
+                '38': 'images/pokeball-38.png'
+              }
+            });
+            chrome.browserAction.setTitle({
+              title: 'Pokemon GO Notifications'
+            });
+          }
+        }
+        console.log(currentPokemon);
 
-  setTimeout(() => {
-    lookForPokemon();
-  }, pollingTime);
+        setTimeout(() => {
+          lookForPokemon();
+        }, pollingTime);
+      });
+  });
 }
 
 function pokemonHasBeenSighted(pokemon) {
@@ -133,18 +128,65 @@ function pokemonHasBeenSighted(pokemon) {
   return pokemonAlreadySighted;
 }
 
-function newPokemonNotification(pokemonId, uid) {
-  chrome.notifications.create(uid, {
+function newPokemonNotification(pokemonId, id) {
+  chrome.notifications.create(id, {
     type: 'basic',
     iconUrl: 'images/pokemon/' + pokemonId + '.png',
     title: 'Pokemon alert!',
-    message: `There is a ${capitalizeFirstLetter(PokemonMap[pokemonId.toString()])} nearby!`,
+    message: `A ${capitalizeFirstLetter(PokemonMap[pokemonId.toString()])} has spawned nearby!`,
     buttons: [{
       title: 'Click here to check PokeVision!'
     }]
   }, (notificationId) => {});
 }
 
+function scanForPokemon(latitude, longitude, callback) {
+  let success = true;
+  request
+    .get(`https://pokevision.com/map/scan/${latitude}/${longitude}`)
+    .set('accept', 'application/json, text/javascript, */*; q=0.01')
+    .set('accept-language', 'en-US,en;q=0.8')
+    .end((err, res) => {
+      if (err || !res.ok) {
+        success = false;
+      } else if (res.body) {
+        if (res.body['status'] != 'success') {
+          success = false;
+        }
+      } else {
+        success = false;
+      }
+    });
+  if (success) {
+    callback();
+  } else {
+    if (!pokevisionDown) {
+      pokevisionDown = !pokevisionDown;
+      if (pokevisionDown) {
+        chrome.browserAction.setIcon({
+          path : {
+            '19': 'images/yellow-pokeball-19.png',
+            '38': 'images/yellow-pokeball-38.png'
+          }
+        });
+        chrome.browserAction.setTitle({
+          title: 'PokeVision is down'
+        });
+      } else {
+        chrome.browserAction.setIcon({
+          path : {
+            '19': 'images/pokeball-19.png',
+            '38': 'images/pokeball-38.png'
+          }
+        });
+        chrome.browserAction.setTitle({
+          title: 'Pokemon GO Notifications'
+        });
+      }
+    }
+    lookForPokemon();
+  }
+}
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
