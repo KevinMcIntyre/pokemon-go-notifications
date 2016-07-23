@@ -10,7 +10,7 @@ const LatitudeErrorText = document.getElementById('invalid_latitude');
 longitudeInput.placeholder = localStorage['longitude'];
 latitudeInput.placeholder = localStorage['latitude'];
 
-// Search
+// Event Handlers
 submitButton.onclick = function() {
   const isInvalid = isNaN(latitudeInput.value) || isNaN(longitudeInput.value);
 
@@ -24,28 +24,41 @@ submitButton.onclick = function() {
   }
 }
 
-// Validation for the inputs
 latitudeInput.onchange = function(e) {
   const value = e.target.value;
-
-  if (isNaN(value) || (value > 90) || (value < -90)) {
-    LatitudeErrorText.style.display = '';
-  } else {
-    LatitudeErrorText.style.display = 'none';
-  }
+  isValidLatitude(value);
 }
 
 longitudeInput.onchange = function(e) {
   const value = e.target.value;
+  isValidLongitude(value);
+}
 
+// Validation for the inputs
+function isValidLatitude(value) {
+  if (isNaN(value) || (value > 90) || (value < -90)) {
+    LatitudeErrorText.style.display = '';
+    return false;
+  } else {
+    LatitudeErrorText.style.display = 'none';
+    return true;
+  }
+}
+
+function isValidLongitude(value) {
   if (isNaN(value) || (value > 180) || (value < -180)) {
     LongitudeErrorText.style.display = '';
+    return false;
   } else {
     LongitudeErrorText.style.display = 'none';
+    return true;
   }
 }
 
 // Update Current Pokemon List
 chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
+  if (response.currentPokemon) {
+    // TODO: Render the pokemon on the `current pokemon` view
     console.log(response.currentPokemon);
+  }
 });
