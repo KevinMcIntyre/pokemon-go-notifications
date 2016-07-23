@@ -27,7 +27,7 @@ submitButton.onclick = function() {
 latitudeInput.onchange = function(e) {
   const value = e.target.value;
 
-  if (isNaN(value)) {
+  if (isNaN(value) || (value > 90) || (value < -90)) {
     LatitudeErrorText.style.display = '';
   } else {
     LatitudeErrorText.style.display = 'none';
@@ -37,7 +37,7 @@ latitudeInput.onchange = function(e) {
 longitudeInput.onchange = function(e) {
   const value = e.target.value;
 
-  if (isNaN(value)) {
+  if (isNaN(value) || (value > 180) || (value < -180)) {
     LongitudeErrorText.style.display = '';
   } else {
     LongitudeErrorText.style.display = 'none';
