@@ -151,3 +151,11 @@ const PokemonMap = {
   '150': 'mewtwo',
   '151': 'mew'
 };
+
+const DefaultData = {
+  'location': {
+    latitude : '40.17108634546',
+    longitude : '-75.119866149902'
+  },
+  pollingTime: 30000
+};

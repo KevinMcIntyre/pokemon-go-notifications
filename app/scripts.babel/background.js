@@ -2,9 +2,15 @@
 // Imports (they come from manifest.json > background > scripts)
 var request = window.superagent;
 
-let latitude = '40.17108634546';
-let longitude = '-75.119866149902';
-let pollingTime = 30000;
+// If any of the localStorage objects are missing, repopulate with defaults
+if (localStorage['latitude'] === undefined
+    || localStorage['longitude'] === undefined
+    || localStorage['pollingTime'] === undefined) {
+
+  localStorage['latitude'] = DefaultData.location.latitude;
+  localStorage['longitude'] = DefaultData.location.longitude;
+  localStorage['pollingTime'] = DefaultData.pollingTime;
+}
 
 // Code
 chrome.runtime.onInstalled.addListener(details => {
@@ -12,16 +18,25 @@ chrome.runtime.onInstalled.addListener(details => {
 });
 
 chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
+  const latitude = localStorage['latitude'];
+  const longitude = localStorage['longitude'];
+  const pollingTime = localStorage['pollingTime'];
+
   chrome.tabs.create({
     url: `https://pokevision.com/#/@${latitude},${longitude}`
   });
 });
 
-(function() {
-  lookForPokemon();
-})();
+(function(){lookForPokemon()})();
 
 function lookForPokemon() {
+  const latitude = localStorage['latitude'];
+  const longitude = localStorage['longitude'];
+  const pollingTime = localStorage['pollingTime'];
+
+  console.log("latitude: ", latitude)
+  console.log("longitude: ", longitude)
+
   request
     .get(`https://pokevision.com/map/data/${latitude}/${longitude}`)
     .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
@@ -39,6 +54,7 @@ function lookForPokemon() {
           for (let pokemon of pokemonFound) {
             i++;
             newPokemonNotification(pokemon['pokemonId'], pokemon['uid'] + i);
+            console.log()
           }
         }
       }
@@ -59,6 +75,7 @@ function newPokemonNotification(pokemonId, uid) {
     }]
   }, (notificationId) => {});
 }
+
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
