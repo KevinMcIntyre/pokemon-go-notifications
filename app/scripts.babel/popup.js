@@ -30,32 +30,38 @@ submitButton.onclick = function() {
 latitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLatitudeValid = isValidLatitude(value);
+  setDivVisibility(LatitudeErrorText, isLatitudeValid);
   setButtonState();
 }
 
 longitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLongitutdeValid = isValidLongitude(value);
+  setDivVisibility(LongitudeErrorText, isLongitutdeValid);
   setButtonState();
+}
+
+function setDivVisibility(div, isValid) {
+  if (isValid) {
+    div.style.display = 'none';
+  } else {
+    div.style.display = '';
+  }
 }
 
 // Validation for the inputs
 function isValidLatitude(value) {
   if (!value || isNaN(value) || (value > 90) || (value < -90)) {
-    LatitudeErrorText.style.display = '';
     return false;
   } else {
-    LatitudeErrorText.style.display = 'none';
     return true;
   }
 }
 
 function isValidLongitude(value) {
   if (!value || isNaN(value) || (value > 180) || (value < -180)) {
-    LongitudeErrorText.style.display = '';
     return false;
   } else {
-    LongitudeErrorText.style.display = 'none';
     return true;
   }
 }
@@ -71,3 +77,8 @@ chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
     console.log(response.currentPokemon);
   }
 });
+
+if (module) {
+  // Modules only work during tests
+  module.exports = { isValidLatitude: isValidLatitude, isValidLongitude: isValidLongitude }
+}
