@@ -1,11 +1,43 @@
 'use strict';
 
 const submitButton = document.getElementById('coordinate_submit');
-const longitudeButton = document.getElementById('longitude');
-const latitudeButton = document.getElementById('latitude');
+const longitudeInput = document.getElementById('longitude');
+const latitudeInput = document.getElementById('latitude');
+
+const LongitudeErrorText = document.getElementById('invalid_longitude');
+const LatitudeErrorText = document.getElementById('invalid_latitude');
+
+longitudeInput.placeholder = localStorage['longitude'];
+LatitudeErrorText.placeholder = localStorage['latitude'];
 
 submitButton.onclick = function() {
-  // TODO: Add validation
-  localStorage['latitude'] = latitudeButton.value;
-  localStorage['longitude'] =longitudeButton.value;
+  const isInvalid = isNaN(latitudeInput.value) || isNaN(longitudeInput.value);
+
+  if (!isInvalid) {
+    longitudeInput.placeholder = longitudeInput.value;
+    LatitudeErrorText.placeholder = latitudeInput.value;
+    chrome.runtime.sendMessage({repoll: true}, function(response) { });
+    window.close();
+  }
+}
+
+// Validation for the inputs
+latitudeInput.onchange = function(e) {
+  const value = e.target.value;
+
+  if (isNaN(value)) {
+    LatitudeErrorText.style.display = '';
+  } else {
+    LatitudeErrorText.style.display = 'none';
+  }
+}
+
+longitudeInput.onchange = function(e) {
+  const value = e.target.value;
+
+  if (isNaN(value)) {
+    LongitudeErrorText.style.display = '';
+  } else {
+    LongitudeErrorText.style.display = 'none';
+  }
 }
