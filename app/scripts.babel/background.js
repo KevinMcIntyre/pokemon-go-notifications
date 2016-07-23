@@ -20,6 +20,13 @@ chrome.runtime.onInstalled.addListener(details => {
   console.log('previousVersion', details.previousVersion);
 });
 
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.greeting) {
+      lookForPokemon()
+    }
+});
+
 chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
   const latitude = localStorage['latitude'];
   const longitude = localStorage['longitude'];
@@ -34,9 +41,12 @@ chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) =
 
 function lookForPokemon() {
   let statusChange = false;
-  const latitude = '40.17108634546';
-  const longitude = '-75.119866149902';
+  const latitude = localStorage['latitude'];
+  const longitude = localStorage['longitude'];
   const pollingTime = localStorage['pollingTime'];
+
+  console.log("latitude: ", latitude)
+  console.log("longitude: ", longitude)
 
   request
     .get(`https://pokevision.com/map/data/${latitude}/${longitude}`)
