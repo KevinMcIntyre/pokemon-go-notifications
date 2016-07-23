@@ -10,6 +10,7 @@ const LatitudeErrorText = document.getElementById('invalid_latitude');
 longitudeInput.placeholder = localStorage['longitude'];
 latitudeInput.placeholder = localStorage['latitude'];
 
+// Search
 submitButton.onclick = function() {
   const isInvalid = isNaN(latitudeInput.value) || isNaN(longitudeInput.value);
 
@@ -43,3 +44,8 @@ longitudeInput.onchange = function(e) {
     LongitudeErrorText.style.display = 'none';
   }
 }
+
+// Update Current Pokemon List
+chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
+    console.log(response.currentPokemon);
+});
