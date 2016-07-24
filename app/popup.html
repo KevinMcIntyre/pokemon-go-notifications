@@ -2,37 +2,73 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
     <!-- build:css styles/popup-vendor.css -->
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
-    <link href="styles/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/mdl/material.min.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
+
   </head>
   <body>
-    <form>
-      <div class="form-group">
-        <label for="latitude">Latitude</label>
-        <input type="text" class="form-control" id="latitude" placeholder="-118.498858725">
-        <div id="invalid_latitude" style="color:red;display:none" class="text-help"> Invalid Latitude</div>
-        <label for="longitude">Longitude</label>
-        <input type="text" class="form-control" id="longitude" placeholder="34.008226484">
-        <div id="invalid_longitude" style="color:red;display:none" class="text-help"> Invalid Longitude </div>
-      </div>
-      <button id="coordinate_submit" class="btn btn-success" type="button" disabled>Search!</button>
-    </form>
 
-    <div>
-
+  <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Pokemon GO Notifications</h2>
     </div>
+    <div id="current-pokemon-body" class="mdl-card__supporting-text route-body">
+      <h6 class="supporting-text-header">Current pokemon in the area:</h6>
+    </div>
+    <div id="set-location-body" class="mdl-card__supporting-text route-body" style="display: none">
+      <h6 class="supporting-text-header">Set your search area:</h6>
+      <form>
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input" type="text" id="latitude">
+          <label class="mdl-textfield__label" for="latitude">Latitude</label>
+          <span id="invalid_latitude" class="mdl-textfield__error" style="display: none">Invalid Latitude</span>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield">
+          <input class="mdl-textfield__input" type="text" id="longitude">
+          <label class="mdl-textfield__label" for="longitude">Longitude</label>
+          <span id="invalid_longitude" class="mdl-textfield__error" style="display: none">Invalid Longitude</span>
+        </div>
+        <button id="coordinate_submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+          Search!
+        </button>
+      </form>
+    </div>
+    <div id="notification-options-body" class="mdl-card__supporting-text route-body" style="display: none">
+      <h6 class="supporting-text-header">Notification Options:</h6>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+      <a id='current-pokemon' class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button" style="display: none">
+        Current Pokemon
+      </a>
+      <a id='set-location' class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">
+        Set Location
+      </a>
+      <a id='notification-options' class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">
+        Notification Options
+      </a>
+    </div>
+    <div class="mdl-card__menu">
+      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i class="material-icons">share</i>
+      </button>
+    </div>
+  </div>
+
     <!-- build:js scripts/popup-vendor.js -->
     <!-- bower:js -->
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js scripts/popup.js -->
+    <script src="styles/mdl/material.min.js"></script>
     <script src="scripts/popup.js"></script>
     <!-- endbuild -->
   </body>

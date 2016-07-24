@@ -1,5 +1,18 @@
-body {
-  padding: 20px;
-  width: 200px;
-  height: 100%;
+.demo-card-wide.mdl-card {
+  width: 400px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  background: green center / cover;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+.demo-card-wide {
+  min-height: 0;
+}
+
+.supporting-text-header {
+  margin-top: 0;
 }

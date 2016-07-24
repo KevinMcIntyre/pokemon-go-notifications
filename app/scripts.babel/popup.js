@@ -1,5 +1,30 @@
 'use strict';
 
+
+// Routing
+const routeButtons = document.getElementsByClassName('route-button');
+const routePages= document.getElementsByClassName('route-body');
+
+for (let button of routeButtons) {
+  button.onclick = function() {
+    const requestedPage = button.id;
+    for (let routePage of routePages) {
+      if (routePage.id === requestedPage.concat('-body')) {
+        routePage.style.display = 'block';
+      } else {
+        routePage.style.display = 'none';
+      }
+    }
+    for (let routeButton of routeButtons) {
+      if (routeButton.id === requestedPage) {
+        routeButton.style.display = 'none';
+      } else {
+        routeButton.style.display = 'inline-block';
+      }
+    }
+  }
+}
+
 // Declare varibales and set placeholders
 const submitButton = document.getElementById('coordinate_submit');
 const longitudeInput = document.getElementById('longitude');
@@ -77,6 +102,7 @@ chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
     console.log(response.currentPokemon);
   }
 });
+
 
 if (module) {
   // Modules only work during tests
