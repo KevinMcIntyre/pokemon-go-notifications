@@ -1,9 +1,7 @@
 'use strict';
-
-
 // Routing
-const routeButtons = document.getElementsByClassName('route-button');
-const routePages= document.getElementsByClassName('route-body');
+const routeButtons = document.querySelectorAll('.route-button');
+const routePages= document.querySelectorAll('.route-body');
 
 for (let button of routeButtons) {
   button.onclick = function() {
