@@ -10,13 +10,14 @@
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
     <link href="styles/mdl/material.min.css" rel="stylesheet">
+    <link href="styles/auto-complete.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
 
   </head>
   <body>
 
-  <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+  <div class="popup-card-wide mdl-card mdl-shadow--2dp">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Pokemon GO Notifications</h2>
     </div>
@@ -43,7 +44,34 @@
       </form>
     </div>
     <div id="notification-options-body" class="mdl-card__supporting-text route-body" style="display: none">
-      <h6 class="supporting-text-header">Notification Options:</h6>
+      <h5 class="supporting-text-header">Notification Options:</h5>
+      <div>
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="notifications-enabled">
+          <input type="checkbox" id="notifications-enabled" class="mdl-switch__input" checked>
+          <span class="mdl-switch__label">Notifications</span>
+        </label>
+      </div>
+      <div>
+        <h6 id="blacklist-header">Blacklist a pokemon:</h6>
+        <div class="mdl-tooltip" for="blacklist-header">
+          You will not receive notifications for blacklisted pokemon
+        </div>
+        <div class="blacklist-input-container">
+          <div class="mdl-textfield mdl-js-textfield blacklist-pokemon-input">
+            <input class="mdl-textfield__input" type="text" id="disable-pokemon">
+            <label class="mdl-textfield__label" for="disable-pokemon">Enter pokemon name</label>
+          </div>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent blacklist-button">
+            Blacklist
+          </button>
+        </div>
+      </div>
+      <div>
+        <h6 id="blacklisted-header">Blacklisted pokemon:</h6>
+        <div class="mdl-tooltip" for="blacklisted-header">
+          You will not receive notifications for blacklisted pokemon
+        </div>
+      </div>
     </div>
     <div class="mdl-card__actions mdl-card--border">
       <a id='current-pokemon' class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button" style="display: none">
@@ -67,9 +95,11 @@
     <!-- bower:js -->
     <!-- endbower -->
     <!-- endbuild -->
-
+    <script src="scripts/auto-complete.min.js"></script>
     <!-- build:js scripts/popup.js -->
     <script src="styles/mdl/material.min.js"></script>
+    <script src="scripts/constants.js"></script>
+    <script src="scripts/utils.js"></script>
     <script src="scripts/popup.js"></script>
     <!-- endbuild -->
   </body>

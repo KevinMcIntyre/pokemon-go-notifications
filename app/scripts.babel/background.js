@@ -13,6 +13,7 @@ if (localStorage['latitude'] === undefined
 }
 
 let currentPokemon = [];
+let blacklistedPokemonIds = [];
 let pokevisionDown = false;
 
 // Code
@@ -27,6 +28,9 @@ chrome.runtime.onMessage.addListener(
       lookForPokemon()
     } else if (request.currentPokemon) {
       sendResponse({currentPokemon, PokemonMap});
+    } else if (request.blacklistPokemon) {
+      blacklistedPokemonIds.push(request.blacklistPokemon)
+      console.log(blacklistedPokemonIds);
     }
 });
 
@@ -189,8 +193,4 @@ function scanForPokemon(latitude, longitude, callback) {
     }
     lookForPokemon();
   }
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
