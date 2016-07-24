@@ -4,6 +4,9 @@ const chai = require('chai');
 const expect = chai.expect;
 const jsdom = require('jsdom').jsdom;
 
+const _$ = require('jquery');
+const chaiJquery = require('chai-jquery');
+
 // Setup document
 const documentHTML = '<!doctype html><html>' +
 '<body><input id="longitude"><input id="latitude"><button id="coordinate_submit" disabled>Search!</button>' +
@@ -16,6 +19,10 @@ const documentHTML = '<!doctype html><html>' +
 global.document = jsdom(documentHTML);
 global.window = global.document.defaultView;
 global.navigator = global.window.navigator;
+
+const $ = _$(window);
+
+chaiJquery(chai, chai.util, $);
 
 // Begin Tests
 describe('Longitude and latitude validation', function () {
@@ -82,11 +89,29 @@ describe('DOM manipulation tests', function() {
   });
 
   describe('Current Pokemon list rendering', function() {
+      beforeEach(function () {
+        renderCurrentPokemonList(response);
+      });
 
       it('should render a list item for each pokemon', function() {
-        renderCurrentPokemonList(response);
         const items = document.querySelectorAll('.pokemon-list-item');
         expect(items.length).to.equal(2);
+      });
+
+      it('should should contain span with pokemon name', function() {
+        const items = $('.pokemon-list-item');
+        expect(items.eq(0)).to.contain('Bulbasaur');
+        expect(items.eq(1)).to.contain('Charmander');
+      });
+
+      it('should should contain correct image for each pokemon', function() {
+        const items = $('.pokemon-list-item');
+
+        expect(items.eq(0).find('img')).to.exist;
+        expect(items.eq(0).find('img')).to.have.prop('src','images/pokemon/1.png');
+
+        expect(items.eq(1).find('img')).to.exist;
+        expect(items.eq(1).find('img')).to.have.prop('src','images/pokemon/4.png');
       });
   })
 })
