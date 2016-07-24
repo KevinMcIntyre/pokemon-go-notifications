@@ -80,47 +80,50 @@ function setButtonState() {
 }
 
 // Update Current Pokemon List
-chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
-  if (response.currentPokemon) {
-    console.log(response.currentPokemon);
+chrome.runtime.sendMessage({ currentPokemon: true }, renderCurrentPokemonList);
 
-    // TODO: Create Helper function to clean this up
-    response.currentPokemon.forEach(function(pokemon) {
-      let listItem = document.createElement('a');
-      listItem.onclick = function() {
-        chrome.tabs.create({ url: `https://pokevision.com/#/@${pokemon.latitude},${pokemon.longitude}` });
-      }
-      listItem.className = 'linkable demo-list-action mdl-list';
-      listItem.style.padding = 0;
-      let listItemDiv = document.createElement('div');
-      listItemDiv.className = 'mdl-list__item';
-      listItemDiv.style.padding = 0;
-      let listItemSpan = document.createElement('span');
-      listItemSpan.className = 'mdl-list__item-primary-content';
-      let image = document.createElement('img');
-      image.src = `images/pokemon/${pokemon.pokemonId}.png`
-      let nameSpan = document.createElement('span');
-      let pokemonName = capitalizeFirstLetter(response.PokemonMap[pokemon.pokemonId]);
-      let name = document.createTextNode(pokemonName);
-      nameSpan.appendChild(name);
-      listItemSpan.appendChild(image);
-      listItemSpan.appendChild(nameSpan);
-      listItemDiv.appendChild(listItemSpan);
-      listItem.appendChild(listItemDiv);
-      pokemonListContainer.appendChild(listItem)
-    });
-  }
-});
+function renderCurrentPokemonList(response) {
+  const currentPokemon = response.currentPokemon;
+  const PokemonMap = response.PokemonMap;
+
+  if (!currentPokemon) { return; }
+
+  currentPokemon.forEach(function(pokemon) {
+    let listItem = document.createElement('a');
+    listItem.onclick = function() {
+      chrome.tabs.create({ url: `https://pokevision.com/#/@${pokemon.latitude},${pokemon.longitude}` });
+    }
+    listItem.className = 'linkable pokemon-list-item mdl-list';
+    listItem.style.padding = 0;
+    let listItemDiv = document.createElement('div');
+    listItemDiv.className = 'mdl-list__item';
+    listItemDiv.style.padding = 0;
+    let listItemSpan = document.createElement('span');
+    listItemSpan.className = 'mdl-list__item-primary-content';
+    let image = document.createElement('img');
+    image.src = `images/pokemon/${pokemon.pokemonId}.png`
+    let nameSpan = document.createElement('span');
+    let pokemonName = capitalizeFirstLetter(PokemonMap[pokemon.pokemonId]);
+    let name = document.createTextNode(pokemonName);
+    nameSpan.appendChild(name);
+    listItemSpan.appendChild(image);
+    listItemSpan.appendChild(nameSpan);
+    listItemDiv.appendChild(listItemSpan);
+    listItem.appendChild(listItemDiv);
+    pokemonListContainer.appendChild(listItem)
+  });
+}
 
 // TODO: Add this to a utils file
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-if (typeof module !== "undefined") {
+if (typeof module !== 'undefined') {
   // define module exports for testing purposes
   module.exports = {
     isValidLatitude: isValidLatitude,
-    isValidLongitude: isValidLongitude
+    isValidLongitude: isValidLongitude,
+    renderCurrentPokemonList: renderCurrentPokemonList
   }
 }
