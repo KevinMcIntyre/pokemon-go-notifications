@@ -12,6 +12,7 @@
     "scripts": [
       "../node_modules/superagent/superagent.js",
       "scripts/constants.js",
+      "scripts/utils.js",
       "scripts/chromereload.js",
       "scripts/background.js"
     ]

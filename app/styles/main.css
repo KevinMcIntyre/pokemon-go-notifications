@@ -1,15 +1,17 @@
-.demo-card-wide.mdl-card {
+.popup-card-wide.mdl-card {
   width: 400px;
 }
-.demo-card-wide > .mdl-card__title {
+
+.popup-card-wide > .mdl-card__title {
   color: #fff;
-  background: green center / cover;
+  background: #F44336 center / cover;
 }
-.demo-card-wide > .mdl-card__menu {
+
+.popup-card-wide > .mdl-card__menu {
   color: #fff;
 }
 
-.demo-card-wide {
+.popup-card-wide {
   min-height: 0;
 }
 
@@ -26,6 +28,23 @@ html {
   background-color: hsla(0, 0%, 88%, 0.22);
 }
 
-.linkable>div:hover {
+.linkable > div:hover {
   cursor: pointer;
+}
+
+#blacklist-header {
+  margin-bottom: 0;
+}
+
+#blacklisted-header {
+  margin-top: 0;
+}
+
+.blacklist-pokemon-input {
+  width: 55%;
+  margin-right: 15px;
+}
+
+.blacklist-button {
+  background-color: #444444 !important;
 }

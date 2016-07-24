@@ -133,10 +133,37 @@ function createElement(tag, attributes) {
   return element;
 }
 
-// TODO: Add this to a utils file
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+// Notification Options
+
+function blacklistPokemon(pokemonName) {
+  let reversedPokemonMap = objectSwap(PokemonMap);
+  chrome.runtime.sendMessage({
+    blacklistPokemon: reversedPokemonMap[pokemonName.toLowerCase()]
+  }, function(response) {
+    console.log(response);
+  });
 }
+
+new autoComplete({
+  selector: '#disable-pokemon',
+  minChars: 1,
+  source: function(term, suggest) {
+    term = term.toLowerCase();
+    let choices = Object.keys(PokemonMap).map((key) => {
+      return capitalizeFirstLetter(PokemonMap[key]);
+    });
+    let matches = [];
+    for (let i = 0; i < choices.length; i++) {
+      if (~choices[i].toLowerCase().indexOf(term)) {
+        matches.push(choices[i]);
+      }
+    }
+    suggest(matches);
+  },
+  onSelect: function(e, term) {
+    blacklistPokemon(term);
+  }
+});
 
 if (typeof module !== 'undefined') {
   // define module exports for testing purposes

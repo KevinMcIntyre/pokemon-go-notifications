@@ -11,6 +11,7 @@ gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
     'app/_locales/**',
+    'app/scripts/auto-complete.min.js',
     '!app/scripts.babel',
     '!app/*.json',
     '!app/*.html',
@@ -28,7 +29,7 @@ function lint(files, options) {
   };
 }
 
-gulp.task('lint', lint('app/scripts.babel/**/*.js', {
+gulp.task('lint', lint(['app/scripts.babel/**/*.js', '!app/scripts.babel/auto-complete.min.js'], {
   env: {
     es6: true
   }
