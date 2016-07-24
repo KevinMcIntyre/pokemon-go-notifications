@@ -41,17 +41,9 @@ longitudeInput.onchange = function(e) {
   setButtonState();
 }
 
-function setDivVisibility(div, isValid) {
-  if (isValid) {
-    div.style.display = 'none';
-  } else {
-    div.style.display = '';
-  }
-}
-
 // Validation for the inputs
 function isValidLatitude(value) {
-  if (!value || isNaN(value) || (value > 90) || (value < -90)) {
+  if ((!value && value !== 0) || isNaN(value) || (value > 90) || (value < -90)) {
     return false;
   } else {
     return true;
@@ -59,10 +51,19 @@ function isValidLatitude(value) {
 }
 
 function isValidLongitude(value) {
-  if (!value || isNaN(value) || (value > 180) || (value < -180)) {
+  if ((!value && value !== 0) || isNaN(value) || (value > 180) || (value < -180)) {
     return false;
   } else {
     return true;
+  }
+}
+
+// HTML Element controls
+function setDivVisibility(div, isValid) {
+  if (isValid) {
+    div.style.display = 'none';
+  } else {
+    div.style.display = '';
   }
 }
 
@@ -79,6 +80,6 @@ chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
 });
 
 if (module) {
-  // Modules only work during tests
+  // Modules only work when running tests
   module.exports = { isValidLatitude: isValidLatitude, isValidLongitude: isValidLongitude }
 }
