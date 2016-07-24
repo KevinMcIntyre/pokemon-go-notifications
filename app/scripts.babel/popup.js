@@ -82,11 +82,14 @@ function setButtonState() {
 // Update Current Pokemon List
 chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
   if (response.currentPokemon) {
-    // TODO: Render the pokemon on the `current pokemon` view
     console.log(response.currentPokemon);
 
+    // TODO: Create Helper function to clean this up
     response.currentPokemon.forEach(function(pokemon) {
       let listItem = document.createElement('a');
+      listItem.onclick = function() {
+        chrome.tabs.create({ url: `https://pokevision.com/#/@${pokemon.latitude},${pokemon.longitude}` });
+      }
       listItem.className = 'linkable demo-list-action mdl-list';
       listItem.style.padding = 0;
       let listItemDiv = document.createElement('div');
