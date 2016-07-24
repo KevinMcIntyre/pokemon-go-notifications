@@ -22,6 +22,7 @@
     "notifications",
     "webNavigation",
     "https://pokevision.com/*",
+    "https://fonts.googleapis.com/*",
     "webRequest",
     "storage"
   ],
@@ -39,6 +40,8 @@
   },
   "web_accessible_resources": [
     "images/pokeball-16.png",
-    "images/pokemon/*.png"
+    "images/pokemon/*.png",
+    "styles/mdl/*.*",
+    "styles/mdl/font/*.*"
   ]
 }

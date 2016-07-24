@@ -154,8 +154,8 @@ const PokemonMap = {
 
 const DefaultData = {
   'location': {
-    latitude : '40.17108634546',
-    longitude : '-75.119866149902'
+    latitude : '40.650096099',
+    longitude : '-73.949576433'
   },
   pollingTime: 30000
 };
