@@ -30,49 +30,33 @@ submitButton.onclick = function() {
 latitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLatitudeValid = isValidLatitude(value);
-  setDivVisibility(LatitudeErrorText, isLatitudeValid);
+  LatitudeErrorText.style.display = isLatitudeValid ? 'none' : '';
   setButtonState();
 }
 
 longitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLongitutdeValid = isValidLongitude(value);
-  setDivVisibility(LongitudeErrorText, isLongitutdeValid);
+  LongitudeErrorText.style.display = isLongitutdeValid ? 'none' : '';
   setButtonState();
 }
 
 // Validation for the inputs
 function isValidLatitude(value) {
-  if ((!value && value !== 0) || isNaN(value) || (value > 90) || (value < -90)) {
-    return false;
-  } else {
-    return true;
-  }
+  return !((!value && value !== 0) || isNaN(value) || (value > 90) || (value < -90));
 }
 
 function isValidLongitude(value) {
-  if ((!value && value !== 0) || isNaN(value) || (value > 180) || (value < -180)) {
-    return false;
-  } else {
-    return true;
-  }
+  return !((!value && value !== 0) || isNaN(value) || (value > 180) || (value < -180));
 }
 
 // HTML Element controls
-function setDivVisibility(div, isValid) {
-  if (isValid) {
-    div.style.display = 'none';
-  } else {
-    div.style.display = '';
-  }
-}
-
 function setButtonState() {
   submitButton.disabled = !(isLatitudeValid && isLongitutdeValid);
 }
 
 // Update Current Pokemon List
-chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
+chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
   if (response.currentPokemon) {
     // TODO: Render the pokemon on the `current pokemon` view
     console.log(response.currentPokemon);
@@ -80,6 +64,9 @@ chrome.runtime.sendMessage({currentPokemon: true}, function(response) {
 });
 
 if (module) {
-  // Modules only work when running tests
-  module.exports = { isValidLatitude: isValidLatitude, isValidLongitude: isValidLongitude }
+  // define module exports for testing purposes
+  module.exports = {
+    isValidLatitude: isValidLatitude,
+    isValidLongitude: isValidLongitude
+  }
 }

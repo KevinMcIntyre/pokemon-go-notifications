@@ -61,3 +61,12 @@ describe('Longitude and latitude validation', function () {
       expect(popup.isValidLongitude(180)).to.equal(true);
   });
 });
+
+describe('DOM manipulation tests', function() {
+  let popup;
+
+  beforeEach(function () {
+     global.chrome = require('sinon-chrome');
+     popup = require('../../app/scripts.babel/popup')
+  });
+})
