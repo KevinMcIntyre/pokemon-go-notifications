@@ -10,6 +10,7 @@ const documentHTML = '<!doctype html><html>' +
 '<a id="current-pokemon" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button" style="display: none">Current Pokemon</a>' +
 '<a id="set-location" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">Set Location</a>' +
 '<a id="notification-options" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">Notification Options</a>' +
+'<div id="pokemon_list_container"></div>'+
 '</body></html>';
 
 global.document = jsdom(documentHTML);
