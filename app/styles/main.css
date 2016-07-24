@@ -16,3 +16,7 @@
 .supporting-text-header {
   margin-top: 0;
 }
+
+html {
+  height: auto;
+}

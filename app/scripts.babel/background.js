@@ -71,7 +71,7 @@ function lookForPokemon() {
           if (pokemonFound) {
             for (let pokemon of pokemonFound) {
               if (!pokemonHasBeenSighted(pokemon)) {
-                newPokemonNotification(pokemon['pokemonId'], pokemon['id']);
+                newPokemonNotification(pokemon['pokemonId'], pokemon['id'].toString());
                 currentPokemon.push(pokemon);
               }
             }
