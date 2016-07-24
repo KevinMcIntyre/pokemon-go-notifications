@@ -1,7 +1,7 @@
 'use strict';
 // Routing
 const routeButtons = document.querySelectorAll('.route-button');
-const routePages= document.querySelectorAll('.route-body');
+const routePages = document.querySelectorAll('.route-body');
 
 for (let button of routeButtons) {
   button.onclick = function() {
@@ -29,6 +29,7 @@ const longitudeInput = document.getElementById('longitude');
 const latitudeInput = document.getElementById('latitude');
 const LongitudeErrorText = document.getElementById('invalid_longitude');
 const LatitudeErrorText = document.getElementById('invalid_latitude');
+const pokemonListContainer = document.getElementById('pokemon_list_container');
 
 let isLatitudeValid = false;
 let isLongitutdeValid = false;
@@ -83,6 +84,27 @@ chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
   if (response.currentPokemon) {
     // TODO: Render the pokemon on the `current pokemon` view
     console.log(response.currentPokemon);
+
+    response.currentPokemon.forEach(function(pokemon) {
+      let listItem = document.createElement('div');
+      listItem.className = 'demo-list-action mdl-list';
+      listItem.style.padding = 0;
+      let listItemDiv = document.createElement('div');
+      listItemDiv.className = 'mdl-list__item';
+      listItemDiv.style.padding = 0;
+      let listItemSpan = document.createElement('span');
+      listItemSpan.className = 'mdl-list__item-primary-content';
+      let image = document.createElement('img');
+      image.src = `images/pokemon/${pokemon.pokemonId}.png`
+      let nameSpan = document.createElement('span');
+      let name = document.createTextNode(pokemon.id);
+      nameSpan.appendChild(name);
+      listItemSpan.appendChild(image);
+      listItemSpan.appendChild(nameSpan);
+      listItemDiv.appendChild(listItemSpan);
+      listItem.appendChild(listItemDiv);
+      pokemonListContainer.appendChild(listItem)
+    });
   }
 });
 
