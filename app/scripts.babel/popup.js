@@ -86,8 +86,8 @@ chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
     console.log(response.currentPokemon);
 
     response.currentPokemon.forEach(function(pokemon) {
-      let listItem = document.createElement('div');
-      listItem.className = 'demo-list-action mdl-list';
+      let listItem = document.createElement('a');
+      listItem.className = 'linkable demo-list-action mdl-list';
       listItem.style.padding = 0;
       let listItemDiv = document.createElement('div');
       listItemDiv.className = 'mdl-list__item';
@@ -97,7 +97,8 @@ chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
       let image = document.createElement('img');
       image.src = `images/pokemon/${pokemon.pokemonId}.png`
       let nameSpan = document.createElement('span');
-      let name = document.createTextNode(pokemon.id);
+      let pokemonName = capitalizeFirstLetter(response.PokemonMap[pokemon.pokemonId]);
+      let name = document.createTextNode(pokemonName);
       nameSpan.appendChild(name);
       listItemSpan.appendChild(image);
       listItemSpan.appendChild(nameSpan);
@@ -108,8 +109,12 @@ chrome.runtime.sendMessage({ currentPokemon: true }, function(response) {
   }
 });
 
+// TODO: Add this to a utils file
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-if (module) {
+if (typeof module !== "undefined") {
   // define module exports for testing purposes
   module.exports = {
     isValidLatitude: isValidLatitude,

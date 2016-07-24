@@ -22,12 +22,11 @@ chrome.runtime.onInstalled.addListener(details => {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(request)
-
-    if (request.greeting) {
+    if (request.repoll) {
+      currentPokemon = [];
       lookForPokemon()
     } else if (request.currentPokemon) {
-      sendResponse({currentPokemon});
+      sendResponse({currentPokemon, PokemonMap});
     }
 });
 

@@ -20,3 +20,12 @@
 html {
   height: auto;
 }
+
+.linkable:hover {
+  cursor: pointer;
+  background-color: hsla(0, 0%, 88%, 0.22);
+}
+
+.linkable>div:hover {
+  cursor: pointer;
+}
