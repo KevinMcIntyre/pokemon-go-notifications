@@ -89,19 +89,22 @@ function renderCurrentPokemonList(response) {
   if (!currentPokemon) { return; }
 
   currentPokemon.forEach(function(pokemon) {
-    let listItem = document.createElement('a');
+    let listItem = document.createElement('div');
     listItem.onclick = function() {
       chrome.tabs.create({ url: `https://pokevision.com/#/@${pokemon.latitude},${pokemon.longitude}` });
     }
     listItem.className = 'linkable pokemon-list-item mdl-list';
     listItem.style.padding = 0;
-    let listItemDiv = document.createElement('div');
-    listItemDiv.className = 'mdl-list__item';
-    listItemDiv.style.padding = 0;
-    let listItemSpan = document.createElement('span');
-    listItemSpan.className = 'mdl-list__item-primary-content';
-    let image = document.createElement('img');
-    image.src = `images/pokemon/${pokemon.pokemonId}.png`
+    let listItemDiv = createElement('div', {
+      className: 'mdl-list__item',
+      style: { padding: 0}
+    });
+    let listItemSpan = createElement('span', {
+      className: 'mdl-list__item-primary-content'
+    });
+    let image = createElement('img', {
+      src : `images/pokemon/${pokemon.pokemonId}.png`
+    });
     let nameSpan = document.createElement('span');
     let pokemonName = capitalizeFirstLetter(PokemonMap[pokemon.pokemonId]);
     let name = document.createTextNode(pokemonName);
@@ -112,6 +115,22 @@ function renderCurrentPokemonList(response) {
     listItem.appendChild(listItemDiv);
     pokemonListContainer.appendChild(listItem)
   });
+}
+
+// TODO: Move this to utils
+function createElement(tag, attributes) {
+  const element = document.createElement(tag);
+  const keys = Object.keys(attributes);
+
+  for(let key of keys) {
+    if (key === 'style') {
+      element.style = attributes[key];
+    } else {
+      if (key === 'className') { key = 'class'; }
+      element.setAttribute(key, attributes[key])
+    }
+  }
+  return element;
 }
 
 // TODO: Add this to a utils file
