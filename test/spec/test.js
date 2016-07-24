@@ -68,9 +68,25 @@ describe('Longitude and latitude validation', function () {
 
 describe('DOM manipulation tests', function() {
   let popup;
+  let renderCurrentPokemonList;
+  let response;
 
   beforeEach(function () {
      global.chrome = require('sinon-chrome');
-     popup = require('../../app/scripts.babel/popup')
+     popup = require('../../app/scripts.babel/popup');
+     renderCurrentPokemonList = popup.renderCurrentPokemonList;
+     response = {
+       currentPokemon: [{ pokemonId: 1, latitude: 12, longitude: 34 }, { pokemonId: 4, latitude: 14, longitude: 43 }],
+       PokemonMap: { 1: 'bulbasaur', 4: 'charmander'}
+     };
   });
+
+  describe('Current Pokemon list rendering', function() {
+
+      it('should render a list item for each pokemon', function() {
+        renderCurrentPokemonList(response);
+        const items = document.querySelectorAll('.pokemon-list-item');
+        expect(items.length).to.equal(2);
+      });
+  })
 })
