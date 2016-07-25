@@ -113,6 +113,9 @@ function renderCurrentPokemonList(response) {
     let distanceSpan = createElement('span', {
       className: 'pokemon-distance'
     });
+    let detailSpan = createElement('span', {
+      className: 'pokemon-details'
+    });
     let pokemonName = capitalizeFirstLetter(PokemonMap[pokemon.pokemonId]);
     let distanceKm = getDistanceFromLatLonInKm(pokemon.latitude, pokemon.longitude, latitude, longitude);
     if (!isNaN(distanceKm)) {
@@ -122,9 +125,10 @@ function renderCurrentPokemonList(response) {
     let name = document.createTextNode(pokemonName);
     nameSpan.appendChild(name);
     distanceSpan.appendChild(distance);
+    detailSpan.appendChild(nameSpan);
+    detailSpan.appendChild(distanceSpan),
     listItemSpan.appendChild(image);
-    listItemSpan.appendChild(nameSpan);
-    listItemSpan.appendChild(distanceSpan);
+    listItemSpan.appendChild(detailSpan);
     listItemDiv.appendChild(listItemSpan);
     listItem.appendChild(listItemDiv);
     pokemonListContainer.appendChild(listItem)

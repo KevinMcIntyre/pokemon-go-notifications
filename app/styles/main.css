@@ -92,8 +92,12 @@ html {
   color: #00aced;
 }
 
+.pokemon-details {
+  margin-left: 15px;
+}
+
 .pokemon-name {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .pokemon-distance {
