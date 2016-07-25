@@ -5,15 +5,23 @@ var request = window.superagent;
 // If any of the localStorage objects are missing, repopulate with defaults
 if (localStorage['latitude'] === undefined
     || localStorage['longitude'] === undefined
-    || localStorage['pollingTime'] === undefined) {
+    || localStorage['pollingTime'] === undefined
+    || localStorage['blacklist'] === undefined
+    || localStorage['notificationsEnabled'] === undefined) {
 
   localStorage['latitude'] = DefaultData.location.latitude;
   localStorage['longitude'] = DefaultData.location.longitude;
   localStorage['pollingTime'] = DefaultData.pollingTime;
+  localStorage['blacklist'] = JSON.stringify([]);
+  localStorage['notificationsEnabled'] = "true";
 }
 
+// This is used to prevent notification bombardment from already spawned pokemon
+let firstCall = true;
+
 let currentPokemon = [];
-let blacklistedPokemonIds = [];
+let blacklist = JSON.parse(localStorage['blacklist']);
+let notificationsEnabled = (localStorage['notificationsEnabled'] === 'true');
 let pokevisionDown = false;
 
 // Code
@@ -25,12 +33,35 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.repoll) {
       currentPokemon = [];
+      firstCall = true;
       lookForPokemon()
     } else if (request.currentPokemon) {
       sendResponse({currentPokemon, PokemonMap});
     } else if (request.blacklistPokemon) {
-      blacklistedPokemonIds.push(request.blacklistPokemon)
-      console.log(blacklistedPokemonIds);
+      if (blacklist.indexOf(request.blacklistPokemon) === -1) {
+        blacklist.push(request.blacklistPokemon);
+        blacklist.sort((a, b) => {
+          return parseInt(a, 10) - parseInt(b, 10);
+        });
+        sendResponse(blacklist);
+        ((blacklist) => {
+          localStorage['blacklist'] = JSON.stringify(blacklist);
+        })(blacklist);
+      }
+    } else if (request.whitelistPokemon) {
+      const index = blacklist.indexOf(request.whitelistPokemon);
+      if (index > -1) {
+        blacklist.splice(index, 1);
+        sendResponse(blacklist);
+        ((blacklist) => {
+          localStorage['blacklist'] = JSON.stringify(blacklist);
+        })(blacklist);
+      }
+    } else if (request.toggleNotifications) {
+      notificationsEnabled = !notificationsEnabled;
+      ((notificationsEnabled) => {
+        localStorage['notificationsEnabled'] = notificationsEnabled.toString();
+      })(notificationsEnabled);
     }
 });
 
@@ -74,7 +105,9 @@ function lookForPokemon() {
           if (pokemonFound) {
             for (let pokemon of pokemonFound) {
               if (!pokemonHasBeenSighted(pokemon)) {
-                newPokemonNotification(pokemon['pokemonId'], pokemon['id'].toString());
+                if (!firstCall && notificationsEnabled && blacklist.indexOf(pokemon['pokemonId'].toString()) === -1) {
+                  newPokemonNotification(pokemon['pokemonId'], pokemon['id'].toString());
+                }
                 currentPokemon.push(pokemon);
               }
             }
@@ -84,6 +117,7 @@ function lookForPokemon() {
             currentPokemon = currentPokemon.filter(function(pokemon) {
               return (foundPokemonIds.indexOf(pokemon['id']) > -1)
             });
+            firstCall = false;
           }
         } else {
           if (!pokevisionDown) {
@@ -94,6 +128,7 @@ function lookForPokemon() {
         if (statusChange) {
           pokevisionDown = !pokevisionDown;
           if (pokevisionDown) {
+            firstCall = true;
             chrome.browserAction.setIcon({
               path : {
                 '19': 'images/yellow-pokeball-19.png',
@@ -115,7 +150,6 @@ function lookForPokemon() {
             });
           }
         }
-        console.log(currentPokemon);
 
         setTimeout(() => {
           lookForPokemon();
@@ -140,7 +174,7 @@ function newPokemonNotification(pokemonId, id) {
     type: 'basic',
     iconUrl: 'images/pokemon/' + pokemonId + '.png',
     title: 'Pokemon alert!',
-    message: `A ${capitalizeFirstLetter(PokemonMap[pokemonId.toString()])} has spawned nearby!`,
+    message: `${capitalizeFirstLetter(PokemonMap[pokemonId.toString()])} has spawned nearby!`,
     buttons: [{
       title: 'Click here to check PokeVision!'
     }]

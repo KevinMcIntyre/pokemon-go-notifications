@@ -46,8 +46,8 @@
     <div id="notification-options-body" class="mdl-card__supporting-text route-body" style="display: none">
       <h5 class="supporting-text-header">Notification Options:</h5>
       <div>
-        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="notifications-enabled">
-          <input type="checkbox" id="notifications-enabled" class="mdl-switch__input" checked>
+        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="notification-switch">
+          <input type="checkbox" id="notification-switch" class="mdl-switch__input">
           <span class="mdl-switch__label">Notifications</span>
         </label>
       </div>
@@ -61,15 +61,16 @@
             <input class="mdl-textfield__input" type="text" id="disable-pokemon">
             <label class="mdl-textfield__label" for="disable-pokemon">Enter pokemon name</label>
           </div>
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent blacklist-button">
-            Blacklist
-          </button>
         </div>
       </div>
       <div>
         <h6 id="blacklisted-header">Blacklisted pokemon:</h6>
         <div class="mdl-tooltip" for="blacklisted-header">
           You will not receive notifications for blacklisted pokemon
+        </div>
+        <div id="blacklist-container">
+          <ul>
+          </ul>
         </div>
       </div>
     </div>

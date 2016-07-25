@@ -120,28 +120,68 @@ function renderCurrentPokemonList(response) {
 // TODO: Move this to utils
 function createElement(tag, attributes) {
   const element = document.createElement(tag);
-  const keys = Object.keys(attributes);
+  if (attributes) {
+    const keys = Object.keys(attributes);
 
-  for(let key of keys) {
-    if (key === 'style') {
-      element.style = attributes[key];
-    } else {
-      if (key === 'className') { key = 'class'; }
-      element.setAttribute(key, attributes[key])
+    for(let key of keys) {
+      if (key === 'style') {
+        element.style = attributes[key];
+      } else {
+        if (key === 'className') { key = 'class'; }
+        element.setAttribute(key, attributes[key])
+      }
     }
   }
   return element;
 }
 
 // Notification Options
+let blacklist = JSON.parse(localStorage['blacklist']);
 
 function blacklistPokemon(pokemonName) {
   let reversedPokemonMap = objectSwap(PokemonMap);
   chrome.runtime.sendMessage({
     blacklistPokemon: reversedPokemonMap[pokemonName.toLowerCase()]
   }, function(response) {
-    console.log(response);
+    if (response) {
+      blacklist = response;
+      renderBlacklistedPokemon(blacklist);
+    }
   });
+  const input = document.querySelector('#disable-pokemon');
+  input.value = '';
+}
+
+function whitelistPokemon(pokemonName) {
+  let reversedPokemonMap = objectSwap(PokemonMap);
+  chrome.runtime.sendMessage({
+   whitelistPokemon: reversedPokemonMap[pokemonName.toLowerCase()]
+  }, function(response) {
+    if (response) {
+      blacklist = response;
+      renderBlacklistedPokemon(blacklist);
+    }
+  });
+}
+
+function renderBlacklistedPokemon(blacklistedPokemonIds) {
+  const blacklistedPokemon = blacklistedPokemonIds.map((pokemonId) => {
+    return capitalizeFirstLetter(PokemonMap[pokemonId]);
+  });
+  const blacklist = createElement('ul');
+  for (let pokemon of blacklistedPokemon) {
+    const li = createElement('li');
+    const anchor = createElement('a');
+    anchor.innerHTML = pokemon;
+    li.appendChild(anchor);
+    li.onclick = function() {
+      whitelistPokemon(pokemon);
+    };
+    blacklist.appendChild(li);
+  }
+  const blacklistContainer = document.querySelector('#blacklist-container');
+  blacklistContainer.firstElementChild.remove();
+  blacklistContainer.appendChild(blacklist);
 }
 
 new autoComplete({
@@ -164,6 +204,19 @@ new autoComplete({
     blacklistPokemon(term);
   }
 });
+
+renderBlacklistedPokemon(blacklist);
+
+const notificationSwitch = document.querySelector('#notification-switch');
+if (localStorage['notificationsEnabled'] === 'true') {
+  notificationSwitch.setAttribute('checked', 'checked');
+}
+
+notificationSwitch.onclick = function() {
+  chrome.runtime.sendMessage({
+    toggleNotifications: true
+  }, function(response) {});
+};
 
 if (typeof module !== 'undefined') {
   // define module exports for testing purposes
