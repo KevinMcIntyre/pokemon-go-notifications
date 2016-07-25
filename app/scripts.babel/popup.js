@@ -139,6 +139,40 @@ function createElement(tag, attributes) {
   return element;
 }
 
+// Social Buttons
+
+document.querySelector('#facebook-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Ffacebook.com';
+  chrome.windows.create({
+    'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
+    'type': 'popup',
+    'width': 555,
+    'height': 424
+  }, function(window) {
+  });
+};
+
+document.querySelector('#twitter-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Ftwitter.com';
+  const queryText = 'Hello%20world';
+  chrome.windows.create({
+    'url': `https://twitter.com/intent/tweet?url=${queryURL}&text=${queryText}`,
+    'type': 'popup',
+    'width': 640,
+    'height': 253
+  }, function(window) {
+  });
+};
+
+document.querySelector('#github-button').onclick = function () {
+  chrome.tabs.create({
+    url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'
+  });
+};
+
+
 if (typeof module !== 'undefined') {
   // define module exports for testing purposes
   module.exports = {
