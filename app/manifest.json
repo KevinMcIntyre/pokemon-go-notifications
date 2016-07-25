@@ -21,6 +21,7 @@
     "background",
     "cookies",
     "notifications",
+    "geolocation",
     "webNavigation",
     "https://pokevision.com/*",
     "webRequest",

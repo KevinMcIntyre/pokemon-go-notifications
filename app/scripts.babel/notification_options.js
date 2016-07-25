@@ -1,9 +1,33 @@
 
-document.querySelector('.gps-coordinate-link').onclick = function() {
-  chrome.tabs.create({
-    url: 'http://www.gps-coordinates.net/'
+document.querySelector('.gps-current-location').onclick = function() {
+  const longitudeInput = document.getElementById('longitude');
+  const latitudeInput = document.getElementById('latitude');
+
+  getGeolocation().then(function(res){
+    longitudeInput.value = res.longitude;
+    latitudeInput.value = res.latitude;
+    longitudeInput.onchange({ target: { value: res.longitude }})
+    latitudeInput.onchange({ target: { value: res.latitude }})
   });
+
+  // chrome.runtime.sendMessage({ getGeoLocation: true }, function(res) {
+  //   console.log(res);
+  //
+  //   longitudeInput.value = res.longitude;
+  //   latitudeInput.value = res.latitude;
+  // });
 };
+
+function getGeolocation() {
+  return new Promise( function(resolve, reject) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      resolve({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    });
+  });
+}
 
 // Notification Options
 let blacklist = JSON.parse(localStorage['blacklist']);
