@@ -12,6 +12,7 @@ gulp.task('extras', () => {
     'app/*.*',
     'app/_locales/**',
     'app/scripts/auto-complete.min.js',
+    'app/scripts/notification_options.js',
     '!app/scripts.babel',
     '!app/*.json',
     '!app/*.html',
