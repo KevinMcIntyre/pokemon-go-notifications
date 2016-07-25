@@ -96,25 +96,57 @@ function renderCurrentPokemonList(response) {
     listItem.className = 'linkable pokemon-list-item mdl-list';
     listItem.style.padding = 0;
     let listItemDiv = createElement('div', {
-      className: 'mdl-list__item',
-      style: { padding: 0}
+      className: 'mdl-list__item'
     });
+    listItemDiv.style.padding = 0;
     let listItemSpan = createElement('span', {
       className: 'mdl-list__item-primary-content'
     });
     let image = createElement('img', {
       src : `images/pokemon/${pokemon.pokemonId}.png`
     });
-    let nameSpan = document.createElement('span');
+    let nameSpan = createElement('span', {
+      className: 'pokemon-name'
+    });
+    let distanceSpan = createElement('span', {
+      className: 'pokemon-distance'
+    });
     let pokemonName = capitalizeFirstLetter(PokemonMap[pokemon.pokemonId]);
+    let distanceKm = getDistanceFromLatLonInKm(pokemon.latitude, pokemon.longitude)
+    if (!isNaN(distanceKm)) {
+      distanceKm = (distanceKm).toFixed(2)
+    }
+    const distance =  document.createTextNode(' is ' + distanceKm + ' km(s) away');
     let name = document.createTextNode(pokemonName);
     nameSpan.appendChild(name);
+    distanceSpan.appendChild(distance);
     listItemSpan.appendChild(image);
     listItemSpan.appendChild(nameSpan);
+    listItemSpan.appendChild(distanceSpan);
     listItemDiv.appendChild(listItemSpan);
     listItem.appendChild(listItemDiv);
     pokemonListContainer.appendChild(listItem)
   });
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1) {
+  lat2 = localStorage["latitude"];
+  lon2 = localStorage["longitude"];
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1);
+  var a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
 }
 
 function capitalizeFirstLetter(string) {
@@ -128,12 +160,9 @@ function createElement(tag, attributes) {
     const keys = Object.keys(attributes);
 
     for(let key of keys) {
-      if (key === 'style') {
-        element.style = attributes[key];
-      } else {
-        if (key === 'className') { key = 'class'; }
-        element.setAttribute(key, attributes[key])
-      }
+      let attribute = attributes[key];
+      if (key === 'className') { key = 'class'; }
+      element.setAttribute(key, attribute)
     }
   }
   return element;

@@ -90,3 +90,12 @@ html {
 .fa-twitter {
   color: #00aced;
 }
+
+.pokemon-name {
+  font-weight: 600;
+}
+
+.pokemon-distance {
+  font-size: 12px;
+  padding-left: 4px;
+}
