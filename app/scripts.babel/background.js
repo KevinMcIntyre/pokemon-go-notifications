@@ -36,7 +36,12 @@ chrome.runtime.onMessage.addListener(
       firstCall = true;
       lookForPokemon()
     } else if (request.currentPokemon) {
-      sendResponse({currentPokemon, PokemonMap});
+      sendResponse({
+        currentPokemon,
+        PokemonMap,
+        longitude: localStorage['longitude'],
+        latitude: localStorage['latitude']
+      });
     } else if (request.blacklistPokemon) {
       if (blacklist.indexOf(request.blacklistPokemon) === -1) {
         blacklist.push(request.blacklistPokemon);

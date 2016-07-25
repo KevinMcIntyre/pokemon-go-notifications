@@ -13,6 +13,9 @@ const documentHTML = '<!doctype html><html>' +
 '<a id="current-pokemon" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button" style="display: none">Current Pokemon</a>' +
 '<a id="set-location" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">Set Location</a>' +
 '<a id="notification-options" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect route-button">Notification Options</a>' +
+'<li class="mdl-menu__item" id="facebook-button"><i class="fa fa-facebook-official social-icon"></i>Facebook</li>' +
+'<li class="mdl-menu__item" id="twitter-button"><i class="fa fa-twitter social-icon"></i>Twitter</li>' +
+'<li class="mdl-menu__item" id="github-button"><i class="fa fa-github social-icon"></i>Github</li>' +
 '<div id="pokemon_list_container"></div>'+
 '</body></html>';
 
@@ -84,7 +87,9 @@ describe('DOM manipulation tests', function() {
      renderCurrentPokemonList = popup.renderCurrentPokemonList;
      response = {
        currentPokemon: [{ pokemonId: 1, latitude: 12, longitude: 34 }, { pokemonId: 4, latitude: 14, longitude: 43 }],
-       PokemonMap: { 1: 'bulbasaur', 4: 'charmander'}
+       PokemonMap: { 1: 'bulbasaur', 4: 'charmander'},
+       latitude: 24,
+       longitude: 36
      };
   });
 

@@ -85,6 +85,8 @@ chrome.runtime.sendMessage({ currentPokemon: true }, renderCurrentPokemonList);
 function renderCurrentPokemonList(response) {
   const currentPokemon = response.currentPokemon;
   const PokemonMap = response.PokemonMap;
+  const latitude = response.latitude;
+  const longitude = response.longitude;
 
   if (!currentPokemon) { return; }
 
@@ -112,7 +114,7 @@ function renderCurrentPokemonList(response) {
       className: 'pokemon-distance'
     });
     let pokemonName = capitalizeFirstLetter(PokemonMap[pokemon.pokemonId]);
-    let distanceKm = getDistanceFromLatLonInKm(pokemon.latitude, pokemon.longitude)
+    let distanceKm = getDistanceFromLatLonInKm(pokemon.latitude, pokemon.longitude, latitude, longitude);
     if (!isNaN(distanceKm)) {
       distanceKm = (distanceKm).toFixed(2)
     }
@@ -129,9 +131,7 @@ function renderCurrentPokemonList(response) {
   });
 }
 
-function getDistanceFromLatLonInKm(lat1,lon1) {
-  lat2 = localStorage["latitude"];
-  lon2 = localStorage["longitude"];
+function getDistanceFromLatLonInKm(lat1,lon1, lat2, lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
   var dLon = deg2rad(lon2-lon1);
