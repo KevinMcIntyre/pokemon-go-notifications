@@ -51,6 +51,12 @@ submitButton.onclick = function() {
   }
 }
 
+document.querySelector('.gps-coordinate-link').onclick = function() {
+  chrome.tabs.create({
+    url: 'http://www.gps-coordinates.net/'
+  });
+};
+
 latitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLatitudeValid = isValidLatitude(value);
@@ -216,6 +222,33 @@ notificationSwitch.onclick = function() {
   chrome.runtime.sendMessage({
     toggleNotifications: true
   }, function(response) {});
+};
+
+// Social Buttons
+
+document.querySelector('#facebook-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Ffacebook.com';
+  chrome.windows.create({
+    'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
+    'type': 'popup',
+    'width': 555,
+    'height': 424
+  }, function(window) {
+  });
+};
+
+document.querySelector('#twitter-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Ftwitter.com';
+  const queryText = 'Hello%20world';
+  chrome.windows.create({
+    'url': `https://twitter.com/intent/tweet?url=${queryURL}&text=${queryText}`,
+    'type': 'popup',
+    'width': 640,
+    'height': 253
+  }, function(window) {
+  });
 };
 
 if (typeof module !== 'undefined') {

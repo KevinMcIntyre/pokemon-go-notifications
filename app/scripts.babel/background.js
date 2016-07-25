@@ -13,7 +13,7 @@ if (localStorage['latitude'] === undefined
   localStorage['longitude'] = DefaultData.location.longitude;
   localStorage['pollingTime'] = DefaultData.pollingTime;
   localStorage['blacklist'] = JSON.stringify([]);
-  localStorage['notificationsEnabled'] = "true";
+  localStorage['notificationsEnabled'] = 'true';
 }
 
 // This is used to prevent notification bombardment from already spawned pokemon

@@ -23,7 +23,6 @@
     "notifications",
     "webNavigation",
     "https://pokevision.com/*",
-    "https://fonts.googleapis.com/*",
     "webRequest",
     "storage"
   ],

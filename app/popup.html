@@ -13,7 +13,7 @@
     <link href="styles/auto-complete.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
-
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
 
@@ -38,9 +38,14 @@
           <label class="mdl-textfield__label" for="longitude">Longitude</label>
           <span id="invalid_longitude" class="mdl-textfield__error" style="display: none">Invalid Longitude</span>
         </div>
-        <button id="coordinate_submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-          Search!
-        </button>
+        <div>
+          <button id="coordinate_submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            Search!
+          </button>
+          <a class="gps-coordinate-link">
+            Click here to get GPS Coordinates
+          </a>
+        </div>
       </form>
     </div>
     <div id="notification-options-body" class="mdl-card__supporting-text route-body" style="display: none">
@@ -86,9 +91,14 @@
       </a>
     </div>
     <div class="mdl-card__menu">
-      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+      <button id="share-button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
         <i class="material-icons">share</i>
       </button>
+      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+          for="share-button">
+        <li class="mdl-menu__item" id="facebook-button"><i class="fa fa-facebook-official social-icon"></i>Facebook</li>
+        <li class="mdl-menu__item" id="twitter-button"><i class="fa fa-twitter social-icon"></i>Twitter</li>
+      </ul>
     </div>
   </div>
 
