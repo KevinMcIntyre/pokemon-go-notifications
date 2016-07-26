@@ -185,7 +185,6 @@ function createElement(tag, attributes) {
 }
 
 // Social Buttons
-
 document.querySelector('#facebook-button').onclick = function () {
   // TODO: Make the link the chrome extension page
   const queryURL = 'https%3A%2F%2Ffacebook.com';
@@ -210,7 +209,6 @@ document.querySelector('#twitter-button').onclick = function () {
   }, function(window) {
   });
 };
-
 document.querySelector('#github-button').onclick = function () {
   chrome.tabs.create({
     url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'

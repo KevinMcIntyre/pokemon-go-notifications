@@ -2,21 +2,27 @@
 // Imports (they come from manifest.json > background > scripts)
 var request = window.superagent;
 
-// If any of the localStorage objects are missing, repopulate with defaults
-if (localStorage['latitude'] === undefined
-    || localStorage['longitude'] === undefined
-    || localStorage['pollingTime'] === undefined
-    || localStorage['blacklist'] === undefined
-    || localStorage['notificationsEnabled'] === undefined
-    || localStorage['soundEnabled'] === undefined) {
-  getGeolocation().then(function(res){
-    localStorage['latitude'] = res.latitude;
-    localStorage['longitude'] = res.longitude;
-  });
-  localStorage['pollingTime'] = DefaultData.pollingTime;
-  localStorage['blacklist'] = JSON.stringify([]);
-  localStorage['notificationsEnabled'] = 'true';
-  localStorage['soundEnabled'] = 'false';
+populateLocalStorage();
+
+function populateLocalStorage() {
+  if (localStorage['latitude'] === undefined || localStorage['longitude'] === undefined) {
+    getGeolocation().then(function(res){
+      localStorage['latitude'] = res.latitude;
+      localStorage['longitude'] = res.longitude;
+    });
+  }
+  if (localStorage['pollingTime'] === undefined) {
+    localStorage['pollingTime'] = DefaultData.pollingTime;
+  }
+  if (localStorage['blacklist'] === undefined) {
+    localStorage['blacklist'] = JSON.stringify([]);
+  }
+  if (localStorage['notificationsEnabled'] === undefined) {
+    localStorage['notificationsEnabled'] = 'true';
+  }
+  if (localStorage['soundEnabled'] === undefined) {
+    localStorage['soundEnabled'] = 'false';
+  }
 }
 
 // This is used to prevent notification bombardment from already spawned pokemon
@@ -196,7 +202,8 @@ function newPokemonNotification(pokemonId, id) {
     buttons: [{
       title: 'Click here to check PokeVision!'
     }]
-  }, (notificationId) => {});
+  }, (notificationId) => {
+  });
 }
 
 function scanForPokemon(latitude, longitude, callback) {
