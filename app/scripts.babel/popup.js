@@ -31,39 +31,8 @@ const LongitudeErrorText = document.getElementById('invalid_longitude');
 const LatitudeErrorText = document.getElementById('invalid_latitude');
 const pokemonListContainer = document.getElementById('pokemon_list_container');
 
-let isLatitudeValid = false;
-let isLongitutdeValid = false;
-
 longitudeInput.placeholder = localStorage['longitude'];
 latitudeInput.placeholder = localStorage['latitude'];
-
-// Event Handlers
-submitButton.onclick = function() {
-  const isValid = isLatitudeValid && isLongitutdeValid;
-
-  if (isValid) {
-    localStorage['latitude'] = latitudeInput.value;
-    localStorage['longitude'] = longitudeInput.value;
-    longitudeInput.placeholder = longitudeInput.value;
-    LatitudeErrorText.placeholder = latitudeInput.value;
-    chrome.runtime.sendMessage({ repoll: true }, function(response) { });
-    window.close();
-  }
-}
-
-latitudeInput.onchange = function(e) {
-  const value = e.target.value;
-  isLatitudeValid = isValidLatitude(value);
-  LatitudeErrorText.style.display = isLatitudeValid ? 'none' : '';
-  setButtonState();
-};
-
-longitudeInput.onchange = function(e) {
-  const value = e.target.value;
-  isLongitutdeValid = isValidLongitude(value);
-  LongitudeErrorText.style.display = isLongitutdeValid ? 'none' : '';
-  setButtonState();
-};
 
 // Validation for the inputs
 function isValidLatitude(value) {
@@ -74,20 +43,31 @@ function isValidLongitude(value) {
   return !((!value && value !== 0) || isNaN(value) || (value > 180) || (value < -180));
 }
 
-// HTML Element controls
-function setButtonState() {
-  submitButton.disabled = !(isLatitudeValid && isLongitutdeValid);
-}
+// Event Handlers
+submitButton.onclick = function(e) {
+  e.preventDefault();
+  console.log(latitudeInput.value);
+  console.log(longitudeInput.value);
+  const validLatitude = isValidLatitude(latitudeInput.value);
+  const validLongitude = isValidLongitude(longitudeInput.value);
+  if (validLatitude && validLongitude) {
+    localStorage['latitude'] = latitudeInput.value;
+    localStorage['longitude'] = longitudeInput.value;
+    longitudeInput.placeholder = longitudeInput.value;
+    latitudeInput.placeholder = latitudeInput.value;
+    latitudeInput.value = '';
+    longitudeInput.value = '';
+    chrome.runtime.sendMessage({ repoll: true }, function(response) { });
+    window.close();
+  }
+  LatitudeErrorText.style.visibility = validLatitude ? 'hidden' : 'visible';
+  LongitudeErrorText.style.visibility = validLongitude ? 'hidden' : 'visible';
+};
 
 document.querySelector('.gps-current-location').onclick = function() {
-  const longitudeInput = document.getElementById('longitude');
-  const latitudeInput = document.getElementById('latitude');
-
   getGeolocation().then(function(res){
     longitudeInput.value = res.longitude;
     latitudeInput.value = res.latitude;
-    longitudeInput.onchange({ target: { value: res.longitude }})
-    latitudeInput.onchange({ target: { value: res.latitude }})
   });
 };
 
@@ -185,35 +165,35 @@ function createElement(tag, attributes) {
 }
 
 // Social Buttons
-document.querySelector('#facebook-button').onclick = function () {
-  // TODO: Make the link the chrome extension page
-  const queryURL = 'https%3A%2F%2Ffacebook.com';
-  chrome.windows.create({
-    'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
-    'type': 'popup',
-    'width': 555,
-    'height': 424
-  }, function(window) {
-  });
-};
-
-document.querySelector('#twitter-button').onclick = function () {
-  // TODO: Make the link the chrome extension page
-  const queryURL = 'https%3A%2F%2Ftwitter.com';
-  const queryText = 'Hello%20world';
-  chrome.windows.create({
-    'url': `https://twitter.com/intent/tweet?url=${queryURL}&text=${queryText}`,
-    'type': 'popup',
-    'width': 640,
-    'height': 253
-  }, function(window) {
-  });
-};
-document.querySelector('#github-button').onclick = function () {
-  chrome.tabs.create({
-    url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'
-  });
-};
+// document.querySelector('#facebook-button').onclick = function () {
+//   // TODO: Make the link the chrome extension page
+//   const queryURL = 'https%3A%2F%2Ffacebook.com';
+//   chrome.windows.create({
+//     'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
+//     'type': 'popup',
+//     'width': 555,
+//     'height': 424
+//   }, function(window) {
+//   });
+// };
+//
+// document.querySelector('#twitter-button').onclick = function () {
+//   // TODO: Make the link the chrome extension page
+//   const queryURL = 'https%3A%2F%2Ftwitter.com';
+//   const queryText = 'Hello%20world';
+//   chrome.windows.create({
+//     'url': `https://twitter.com/intent/tweet?url=${queryURL}&text=${queryText}`,
+//     'type': 'popup',
+//     'width': 640,
+//     'height': 253
+//   }, function(window) {
+//   });
+// };
+// document.querySelector('#github-button').onclick = function () {
+//   chrome.tabs.create({
+//     url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'
+//   });
+// };
 
 
 if (typeof module !== 'undefined') {
