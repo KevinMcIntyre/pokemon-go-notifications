@@ -7,13 +7,16 @@ if (localStorage['latitude'] === undefined
     || localStorage['longitude'] === undefined
     || localStorage['pollingTime'] === undefined
     || localStorage['blacklist'] === undefined
-    || localStorage['notificationsEnabled'] === undefined) {
-
-  localStorage['latitude'] = DefaultData.location.latitude;
-  localStorage['longitude'] = DefaultData.location.longitude;
+    || localStorage['notificationsEnabled'] === undefined
+    || localStorage['soundEnabled'] === undefined) {
+  getGeolocation().then(function(res){
+    localStorage['latitude'] = res.latitude;
+    localStorage['longitude'] = res.longitude;
+  });
   localStorage['pollingTime'] = DefaultData.pollingTime;
   localStorage['blacklist'] = JSON.stringify([]);
   localStorage['notificationsEnabled'] = 'true';
+  localStorage['soundEnabled'] = 'false';
 }
 
 // This is used to prevent notification bombardment from already spawned pokemon
@@ -22,6 +25,7 @@ let firstCall = true;
 let currentPokemon = [];
 let blacklist = JSON.parse(localStorage['blacklist']);
 let notificationsEnabled = (localStorage['notificationsEnabled'] === 'true');
+let soundEnabled = (localStorage['soundEnabled'] === 'true');
 let pokevisionDown = false;
 
 // Code
@@ -67,6 +71,11 @@ chrome.runtime.onMessage.addListener(
       ((notificationsEnabled) => {
         localStorage['notificationsEnabled'] = notificationsEnabled.toString();
       })(notificationsEnabled);
+    } else if (request.toggleSound) {
+      soundEnabled = !soundEnabled;
+      ((soundEnabled) => {
+        localStorage['soundEnabled'] = soundEnabled.toString();
+      })(soundEnabled);
     }
 });
 
@@ -175,6 +184,10 @@ function pokemonHasBeenSighted(pokemon) {
 }
 
 function newPokemonNotification(pokemonId, id) {
+  if (soundEnabled) {
+    const notificationSound = new Audio('images/blip.wav');
+    notificationSound.play();
+  }
   chrome.notifications.create(id, {
     type: 'basic',
     iconUrl: 'images/pokemon/' + pokemonId + '.png',

@@ -66,7 +66,7 @@ gulp.task('html',  () => {
 gulp.task('chromeManifest', () => {
   return gulp.src('app/manifest.json')
     .pipe($.chromeManifest({
-      buildnumber: true,
+      buildnumber: false,
       background: {
         target: 'scripts/background.js',
         exclude: [
@@ -121,7 +121,7 @@ gulp.task('wiredep', () => {
 gulp.task('package', function () {
   var manifest = require('./dist/manifest.json');
   return gulp.src('dist/**')
-      .pipe($.zip('pokevision-' + manifest.version + '.zip'))
+      .pipe($.zip('pokemon-go-notifications-' + manifest.version + '.zip'))
       .pipe(gulp.dest('package'));
 });
 

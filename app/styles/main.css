@@ -104,3 +104,7 @@ html {
   font-size: 12px;
   padding-left: 4px;
 }
+
+#sound-switch-container {
+  margin-top: 7px;
+}

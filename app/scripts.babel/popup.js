@@ -56,14 +56,14 @@ latitudeInput.onchange = function(e) {
   isLatitudeValid = isValidLatitude(value);
   LatitudeErrorText.style.display = isLatitudeValid ? 'none' : '';
   setButtonState();
-}
+};
 
 longitudeInput.onchange = function(e) {
   const value = e.target.value;
   isLongitutdeValid = isValidLongitude(value);
   LongitudeErrorText.style.display = isLongitutdeValid ? 'none' : '';
   setButtonState();
-}
+};
 
 // Validation for the inputs
 function isValidLatitude(value) {
@@ -78,6 +78,18 @@ function isValidLongitude(value) {
 function setButtonState() {
   submitButton.disabled = !(isLatitudeValid && isLongitutdeValid);
 }
+
+document.querySelector('.gps-current-location').onclick = function() {
+  const longitudeInput = document.getElementById('longitude');
+  const latitudeInput = document.getElementById('latitude');
+
+  getGeolocation().then(function(res){
+    longitudeInput.value = res.longitude;
+    latitudeInput.value = res.latitude;
+    longitudeInput.onchange({ target: { value: res.longitude }})
+    latitudeInput.onchange({ target: { value: res.latitude }})
+  });
+};
 
 // Update Current Pokemon List
 chrome.runtime.sendMessage({ currentPokemon: true }, renderCurrentPokemonList);

@@ -38,6 +38,7 @@
   "web_accessible_resources": [
     "images/pokeball-16.png",
     "images/pokemon/*.png",
+    "images/blip.wav",
     "styles/mdl/*.*",
     "styles/mdl/font/*.*"
   ]

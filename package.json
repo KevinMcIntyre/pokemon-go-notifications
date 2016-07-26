@@ -1,5 +1,6 @@
 {
-  "name": "Pokemon_GO_Notifications",
+  "name": "pokemon-go-notifications",
+  "version": "0.0.1",
   "private": true,
   "engines": {
     "node": ">=0.8.0"
