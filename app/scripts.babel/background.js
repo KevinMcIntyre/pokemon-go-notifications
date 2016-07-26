@@ -31,6 +31,14 @@ let firstCall = true;
 let currentPokemon = [];
 let blacklist = JSON.parse(localStorage['blacklist']);
 let notificationsEnabled = (localStorage['notificationsEnabled'] === 'true');
+if (!notificationsEnabled) {
+  chrome.browserAction.setIcon({
+    path : {
+      '19': 'images/gray-pokeball-19.png',
+      '38': 'images/gray-pokeball-38.png'
+    }
+  });
+}
 let soundEnabled = (localStorage['soundEnabled'] === 'true');
 let pokevisionDown = false;
 
@@ -77,6 +85,30 @@ chrome.runtime.onMessage.addListener(
       ((notificationsEnabled) => {
         localStorage['notificationsEnabled'] = notificationsEnabled.toString();
       })(notificationsEnabled);
+      if (notificationsEnabled) {
+        if (pokevisionDown) {
+          chrome.browserAction.setIcon({
+            path : {
+              '19': 'images/yellow-pokeball-19.png',
+              '38': 'images/yellow-pokeball-38.png'
+            }
+          });
+        } else {
+          chrome.browserAction.setIcon({
+            path : {
+              '19': 'images/pokeball-19.png',
+              '38': 'images/pokeball-38.png'
+            }
+          });
+        }
+      } else {
+        chrome.browserAction.setIcon({
+          path : {
+            '19': 'images/gray-pokeball-19.png',
+            '38': 'images/gray-pokeball-38.png'
+          }
+        });
+      }
     } else if (request.toggleSound) {
       soundEnabled = !soundEnabled;
       ((soundEnabled) => {
@@ -159,12 +191,21 @@ function lookForPokemon() {
               title: 'PokeVision is down'
             });
           } else {
-            chrome.browserAction.setIcon({
-              path : {
-                '19': 'images/pokeball-19.png',
-                '38': 'images/pokeball-38.png'
-              }
-            });
+            if (notificationsEnabled) {
+              chrome.browserAction.setIcon({
+                path : {
+                  '19': 'images/pokeball-19.png',
+                  '38': 'images/pokeball-38.png'
+                }
+              });
+            } else {
+              chrome.browserAction.setIcon({
+                path : {
+                  '19': 'images/gray-pokeball-19.png',
+                  '38': 'images/gray-pokeball-38.png'
+                }
+              });
+            }
             chrome.browserAction.setTitle({
               title: 'Pokemon GO Notifications'
             });
@@ -181,7 +222,9 @@ function lookForPokemon() {
 function pokemonHasBeenSighted(pokemon) {
   let pokemonAlreadySighted = false;
   for (let current of currentPokemon) {
-    if (current['id'] == pokemon['id']) {
+    if (current['pokemonId'] == pokemon['pokemonId']
+        && current['latitude'] == pokemon['latitude']
+        && current['longitude'] == pokemon['longitude']) {
       pokemonAlreadySighted = true;
       break;
     }
