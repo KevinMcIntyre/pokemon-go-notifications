@@ -2,7 +2,16 @@
 // Imports (they come from manifest.json > background > scripts)
 var request = window.superagent;
 
-(function populateLocalStorage() {
+(function() {
+  populateLocalStorage(() => {
+    window.addEventListener('storage', () => {
+      populateLocalStorage();
+    });
+    lookForPokemon();
+  });
+})();
+
+function populateLocalStorage(callback) {
   if (localStorage['latitude'] === undefined || localStorage['longitude'] === undefined) {
     getGeolocation().then(function(res){
       localStorage['latitude'] = res.latitude;
@@ -21,7 +30,10 @@ var request = window.superagent;
   if (localStorage['soundEnabled'] === undefined) {
     localStorage['soundEnabled'] = 'false';
   }
-})();
+  if (callback) {
+    callback()
+  }
+}
 
 // This is used to prevent notification bombardment from already spawned pokemon
 let firstCall = true;
@@ -124,8 +136,6 @@ chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) =
     url: `https://pokevision.com/#/@${latitude},${longitude}`
   });
 });
-
-(function(){lookForPokemon()})();
 
 function lookForPokemon() {
   let statusChange = false;

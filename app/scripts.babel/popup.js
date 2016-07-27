@@ -4,7 +4,8 @@ const routeButtons = document.querySelectorAll('.route-button');
 const routePages = document.querySelectorAll('.route-body');
 
 for (let button of routeButtons) {
-  button.onclick = function() {
+  button.onclick = function(e) {
+    e.preventDefault();
     const requestedPage = button.id;
     for (let routePage of routePages) {
       if (routePage.id === requestedPage.concat('-body')) {
@@ -133,22 +134,20 @@ function renderCurrentPokemonList(response) {
   });
 }
 
-function getDistanceFromLatLonInKm(lat1,lon1, lat2, lon2) {
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  function deg2rad(deg) {
+    return deg * (Math.PI/180)
+  }
   var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1);
+  var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
   var a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ;
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c; // Distance in km
-  return d;
-}
-
-function deg2rad(deg) {
-  return deg * (Math.PI/180)
+   // Distance in km
+  return R * c;
 }
 
 function capitalizeFirstLetter(string) {
@@ -171,35 +170,34 @@ function createElement(tag, attributes) {
 }
 
 // Social Buttons
-// document.querySelector('#facebook-button').onclick = function () {
-//   // TODO: Make the link the chrome extension page
-//   const queryURL = 'https%3A%2F%2Ffacebook.com';
-//   chrome.windows.create({
-//     'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
-//     'type': 'popup',
-//     'width': 555,
-//     'height': 424
-//   }, function(window) {
-//   });
-// };
-//
-// document.querySelector('#twitter-button').onclick = function () {
-//   // TODO: Make the link the chrome extension page
-//   const queryURL = 'https%3A%2F%2Ftwitter.com';
-//   const queryText = 'Hello%20world';
-//   chrome.windows.create({
-//     'url': `https://twitter.com/intent/tweet?url=${queryURL}&text=${queryText}`,
-//     'type': 'popup',
-//     'width': 640,
-//     'height': 253
-//   }, function(window) {
-//   });
-// };
-// document.querySelector('#github-button').onclick = function () {
-//   chrome.tabs.create({
-//     url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'
-//   });
-// };
+document.querySelector('#facebook-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fpokemon-go-notifications%2Fkphmkgbldkpkfplingidopbjhblgekoo&amp;src=sdkpreparse';
+  chrome.windows.create({
+    'url': `https://www.facebook.com/sharer/sharer.php?u=${queryURL}`,
+    'type': 'popup',
+    'width': 555,
+    'height': 424
+  }, function(window) {
+  });
+};
+
+document.querySelector('#twitter-button').onclick = function () {
+  // TODO: Make the link the chrome extension page
+  const queryURL = 'https%3A%2F%2Fchrome.google.com%2Fwebstore%2Fdetail%2Fpokemon-go-notifications%2Fkphmkgbldkpkfplingidopbjhblgekoo&amp;src=sdkpreparse';
+  chrome.windows.create({
+    'url': `https://twitter.com/intent/tweet?url=${queryURL}`,
+    'type': 'popup',
+    'width': 640,
+    'height': 253
+  }, function(window) {
+  });
+};
+document.querySelector('#github-button').onclick = function () {
+  chrome.tabs.create({
+    url: 'https://github.com/KevinMcIntyre/pokemon-go-notifications'
+  });
+};
 
 
 if (typeof module !== 'undefined') {
