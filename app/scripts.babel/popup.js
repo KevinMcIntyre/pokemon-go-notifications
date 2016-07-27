@@ -46,8 +46,6 @@ function isValidLongitude(value) {
 // Event Handlers
 submitButton.onclick = function(e) {
   e.preventDefault();
-  console.log(latitudeInput.value);
-  console.log(longitudeInput.value);
   const validLatitude = isValidLatitude(latitudeInput.value);
   const validLongitude = isValidLongitude(longitudeInput.value);
   if (validLatitude && validLongitude) {
