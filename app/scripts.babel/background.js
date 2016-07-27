@@ -2,9 +2,7 @@
 // Imports (they come from manifest.json > background > scripts)
 var request = window.superagent;
 
-populateLocalStorage();
-
-function populateLocalStorage() {
+(function populateLocalStorage() {
   if (localStorage['latitude'] === undefined || localStorage['longitude'] === undefined) {
     getGeolocation().then(function(res){
       localStorage['latitude'] = res.latitude;
@@ -23,7 +21,7 @@ function populateLocalStorage() {
   if (localStorage['soundEnabled'] === undefined) {
     localStorage['soundEnabled'] = 'false';
   }
-}
+})();
 
 // This is used to prevent notification bombardment from already spawned pokemon
 let firstCall = true;
