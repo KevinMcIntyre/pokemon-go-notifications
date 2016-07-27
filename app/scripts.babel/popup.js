@@ -63,9 +63,17 @@ submitButton.onclick = function(e) {
 };
 
 document.querySelector('.gps-current-location').onclick = function() {
+  const context = this;
+
+  document.querySelector('#loadingBar').style.display = '';
+  submitButton.style.display = 'none';
+  context.style.display = 'none';
   getGeolocation().then(function(res){
     longitudeInput.value = res.longitude;
     latitudeInput.value = res.latitude;
+    document.querySelector('#loadingBar').style.display = 'none';
+    submitButton.style.display = '';
+    context.style.display = '';
   });
 };
 

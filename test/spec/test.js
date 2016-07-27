@@ -16,6 +16,7 @@ const documentHTML = '<!doctype html><html>' +
 '<li class="mdl-menu__item" id="facebook-button"><i class="fa fa-facebook-official social-icon"></i>Facebook</li>' +
 '<li class="mdl-menu__item" id="twitter-button"><i class="fa fa-twitter social-icon"></i>Twitter</li>' +
 '<li class="mdl-menu__item" id="github-button"><i class="fa fa-github social-icon"></i>Github</li>' +
+'<a class="gps-current-location">' +
 '<div id="pokemon_list_container"></div>'+
 '</body></html>';
 
