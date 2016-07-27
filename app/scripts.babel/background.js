@@ -128,9 +128,12 @@ chrome.runtime.onMessage.addListener(
 });
 
 chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
-  const latitude = localStorage['latitude'];
-  const longitude = localStorage['longitude'];
+  const data = JSON.parse(notificationId)
+  const latitude = data.latitude;
+  const longitude = data.longitude;
   const pollingTime = localStorage['pollingTime'];
+
+  console.log(`Pokemons latitude is ${latitude} and longitude is ${longitude}`);
 
   chrome.tabs.create({
     url: `https://pokevision.com/#/@${latitude},${longitude}`
@@ -166,7 +169,7 @@ function lookForPokemon() {
             for (let pokemon of pokemonFound) {
               if (!pokemonHasBeenSighted(pokemon)) {
                 if (!firstCall && notificationsEnabled && blacklist.indexOf(pokemon['pokemonId'].toString()) === -1) {
-                  newPokemonNotification(pokemon['pokemonId'], pokemon['id'].toString());
+                  newPokemonNotification(pokemon['pokemonId'], pokemon['id'].toString(), pokemon.latitude, pokemon.longitude);
                 }
                 currentPokemon.push(pokemon);
               }
@@ -240,12 +243,14 @@ function pokemonHasBeenSighted(pokemon) {
   return pokemonAlreadySighted;
 }
 
-function newPokemonNotification(pokemonId, id) {
+function newPokemonNotification(pokemonId, id, latitude, longitude) {
   if (soundEnabled) {
     const notificationSound = new Audio('images/blip.wav');
     notificationSound.play();
   }
-  chrome.notifications.create(id, {
+  const notificationId = {id: id, latitude: latitude, longitude: longitude};
+
+  chrome.notifications.create(JSON.stringify(notificationId), {
     type: 'basic',
     iconUrl: 'images/pokemon/' + pokemonId + '.png',
     title: 'Pokemon alert!',
