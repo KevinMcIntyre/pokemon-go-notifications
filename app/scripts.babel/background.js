@@ -161,7 +161,7 @@ function lookForPokemon() {
           }
           console.log('Unable to contact https://pokevision.com');
         } else if (res.body) {
-          if (pokevisionDown) {
+          if (pokevisionDown ) {
             statusChange = true;
           }
           const pokemonFound = res.body['pokemon'];
@@ -273,14 +273,18 @@ function scanForPokemon(latitude, longitude, callback) {
         success = false;
       } else if (res.body) {
         if (res.body['status'] != 'success') {
-          success = false;
+          if (res.body['message'].indexOf('scan-throttle') < -1) {
+            success = false;
+          }
         }
       } else {
         success = false;
       }
     });
   if (success) {
-    callback();
+    if (callback) {
+      callback();
+    }
   } else {
     if (!pokevisionDown) {
       pokevisionDown = !pokevisionDown;

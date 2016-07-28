@@ -66,6 +66,22 @@
         </label>
       </div>
       <div>
+        <h6 id="search-radius-header">Search radius:</h6>
+        <div class="mdl-tooltip" for="search-radius-header">
+          You will not receive notifications for pokemon outside the specified search radius
+        </div>
+        <div class="search-radius-input-container">
+          <div class="mdl-textfield mdl-js-textfield blacklist-pokemon-input search-radius-input">
+            <select id="radius-select">
+              <option value="drive" selected>A short drive</option>
+              <option value="walk">A short walk</option>
+              <option value="outside">I'll go outside real quick</option>
+              <option value="sit">Don't make me get up</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
         <h6 id="blacklist-header">Blacklist a pokemon:</h6>
         <div class="mdl-tooltip" for="blacklist-header">
           You will not receive notifications for blacklisted pokemon

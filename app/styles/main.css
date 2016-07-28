@@ -33,6 +33,7 @@ html {
 }
 
 #blacklist-header {
+  margin-top: 0;
   margin-bottom: 0;
 }
 
@@ -111,4 +112,29 @@ html {
 
 .coordinate-submit-container {
   margin-top: 5px;
+}
+
+#search-radius-header {
+  margin-bottom: 0;
+}
+
+.search-radius-input {
+  width: 55%;
+  margin-right: 15px;
+}
+
+select {
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  height: 2em;
+  background: white;
+  font-size: 16px;
+}
+option {
+  padding: 3em;
+}
+
+#notification-options-body {
+  height: 300px;
+  overflow-y: scroll;
 }
